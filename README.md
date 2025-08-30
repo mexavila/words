@@ -128,8 +128,38 @@ This is a simple system without formal user authentication. The roles are implic
 -   **User**: Interacts with the frontend at `http://localhost:3000` to evaluate text and view reports.
 -   **Administrator**: The person who runs the server, has direct access to the file system (`lists.json`, `evaluations.log`), and manages the `.env` file containing the API key.
 
+---
 
-
-### DIAGRAM
+# DIAGRAM
 
 ![My Screenshot](hackaton.png)
+
+---
+
+# CURL
+
+## Retrieves the current blacklist and whitelist
+curl http://localhost:3000/api/lists
+
+## Overwrites the lists.json file with new content
+curl -X POST http://localhost:3000/api/lists \
+-H "Content-Type: application/json" \
+-d '{
+  "blacklist": ["new-bad-word", "another-one"],
+  "whitelist": ["perfectly-fine-word"]
+}'
+
+## Appends a new entry to the evaluations.log file
+curl -X POST http://localhost:3000/api/log \
+-H "Content-Type: application/json" \
+-d '{
+  "text": "This is a test from curl",
+  "result": {
+    "isValid": true,
+    "profanityScore": 0,
+    "censoredText": "This is a test from curl"
+  }
+}'
+
+## Retrieves the entire log file as plain text
+curl http://localhost:3000/api/log
